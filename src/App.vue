@@ -1,70 +1,26 @@
 <script>
-import {
-  computed,
-  ref,
-  reactive,
-  toRef,
-  toRefs,
-  watch,
-  watchEffect,
-} from "vue";
+import { ref } from "vue";
+import CartItem from "./components/CartItem.vue";
 
 export default {
+  components: { CartItem },
   setup() {
-    const item = reactive({
-      name: "Product 1",
-      price: 10.99,
-      quantity: 1,
-    });
-
-    const increment = () => item.quantity++;
-    const decrement = () => item.quantity--;
-
-    const swapProduct = () => {
-      item.name = "Product A";
-      item.price = 9.99;
-    };
-
-    const total = computed(() => item.price * item.quantity);
-
-    const { name, price, quantity } = toRefs(item);
-
-    watch(
-      () => item.quantity,
-      () => {
-        if (item.quantity === 5) {
-          alert("you cannot add more than 5 items");
-        }
+    const items = ref([
+      {
+        id: 1,
+        name: "Product X",
+        price: 20,
+        quantity: 1,
       },
-      { immediate: true }
-    );
+    ]);
 
-    watchEffect(() => {
-      console.log("Price changed: ", item.price);
-    });
-
-    return {
-      quantity,
-      increment,
-      decrement,
-      item,
-      name,
-      price,
-      total,
-      swapProduct,
-    };
+    return { items };
   },
 };
 </script>
 
 <template>
-  <h1>{{ name }} : {{ price }}</h1>
-  <button @click="swapProduct">Swap Product</button>
-  <button @click="price++">Increment Price</button>
-  <p>Quantity: {{ quantity }}</p>
-  <button @click="increment">+</button>
-  <button @click="decrement">-</button>
-  <p>Total: {{ total }}</p>
+  <CartItem v-for="item in items" :cart-item="item" :key="item.id" />
 </template>
 
 <style scoped></style>
